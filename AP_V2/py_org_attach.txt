@@ -1,0 +1,49 @@
+import os
+import re
+import shutil
+
+folder_path = r'E:\APV2\Export'#change this
+csvpath = r"E:\APInvoicesV2AttachCSV" #change this
+errorfiletomove = r"E:\APInvoicesV2AttachCSV\trash" #change this
+sucessfiletomove = r"E:\APInvoicesV2AttachCSV\archive"
+
+
+            
+
+
+
+list_dir = os.listdir(folder_path)
+
+for f in list_dir:
+    if len(f) > 1:
+        commonfilepath = os.path.join(folder_path, f)
+        if f == "FileNotProcessed.txt" or f == "Unprocessed.txt":
+            errorfilepath = os.path.join(folder_path, f)
+            with open(errorfilepath, 'r') as file:
+                file_content = file.read()
+                pattern = r'vchr(.*?)csv'
+                match = re.search(pattern, file_content, re.DOTALL)
+                if match:
+                    errorfilename = os.path.join(csvpath,match[0])
+                    shutil.move(errorfilename,errorfiletomove)
+        elif f == 'Processed.txt' :
+            processedfilepath = os.path.join(folder_path, f)
+            with open(processedfilepath, 'r') as file:
+                file_content = file.read()
+                pattern = r'vchr(.*?)csv'
+                match = re.search(pattern, file_content, re.DOTALL)
+                if match:
+                    sucessfilename = os.path.join(csvpath,match[0])
+                    shutil.move(sucessfilename, sucessfiletomove)
+        if commonfilepath.endswith(".txt"):
+                os.remove(commonfilepath)
+    else:
+        print("you do not have any csv file yet")
+
+
+
+
+
+
+
+08269-070000
